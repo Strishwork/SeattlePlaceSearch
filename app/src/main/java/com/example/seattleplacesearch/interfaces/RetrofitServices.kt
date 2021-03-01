@@ -1,4 +1,4 @@
-package com.example.seattleplacesearch.`interface`
+package com.example.seattleplacesearch.interfaces
 
 import com.example.seattleplacesearch.JSONResponse
 import retrofit2.Call
@@ -12,6 +12,10 @@ interface RetrofitServices {
         private const val API_VERSION = "20180323"
     }
 
-    @GET("search?client_id=$CLIENT_ID&client_secret=$CLIENT_SECRET&v=$API_VERSION&near=Seattle,+WA")
-    fun getVenuesList(@Query("query") query: String): Call<JSONResponse>
+    @GET("search?v=$API_VERSION&near=Seattle,+WA")
+    fun getVenuesList(
+        @Query("query") query: String,
+        @Query("client_id") id: String = CLIENT_ID,
+        @Query("client_secret") secret: String = CLIENT_SECRET
+    ): Call<JSONResponse>
 }
