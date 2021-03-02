@@ -1,30 +1,40 @@
 package com.example.seattleplacesearch
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
 data class JSONResponse (
     @SerializedName("response")
-    var response: Resp
+    val response: Response
 )
 
-data class Resp(
+data class Response(
     @SerializedName("venues")
-    var venues: ArrayList<Venue> = ArrayList()
+    val venues: ArrayList<VenueDTO> = ArrayList()
 )
 
-data class Venue(
-    var name: String? = null,
-    var categories: ArrayList<Category> = ArrayList(),
-    var location: Location
+data class VenueDTO(
+    val name: String?,
+    val categories: ArrayList<Category> = ArrayList(),
+    val location: VenueLocation
 )
 
 data class Category(
-    var name: String? = null
+    val name: String? = null,
+    val icon: Icon
 )
 
-data class Location(
-    var lat: Float,
-    var lng: Float
+data class Icon(
+    val prefix: String,
+    val suffix: String
 )
+
+@Parcelize
+data class VenueLocation(
+    val address: String?,
+    val lat: Double,
+    val lng: Double
+) : Parcelable
 
 

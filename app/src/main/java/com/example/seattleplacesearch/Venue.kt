@@ -1,10 +1,13 @@
 package com.example.seattleplacesearch
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Venue(
     val name: String,
     val category: String,
     val location: VenueLocation,
-    val iconUrl: String
-) : Serializable
+    val iconUrl: String,
+    val distanceToCenter: Int
+) : Parcelable

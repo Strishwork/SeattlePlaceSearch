@@ -1,6 +1,6 @@
 package com.example.seattleplacesearch.di
 
-import com.example.seattleplacesearch.interfaces.RetrofitServices
+import com.example.seattleplacesearch.api.VenuesApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,12 +17,12 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): RetrofitServices{
+    fun provideRetrofit(): VenuesApi{
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(RetrofitServices::class.java)
+            .create(VenuesApi::class.java)
     }
 
 
