@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">SeattlePlaceSearch</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="searchButtonText">Start your search</string>
+    <string name="noResultsText">No results for this query</string>
+    <string name="distanceToCityCenter">%1$d m to city center</string>
+    <string name="categoryFieldText">Category: </string>
+    <string name="addressFieldText">Address: </string>
+    <string name="distanceFieldText">Distance: </string>
+    <string name="errorMessage">Something went wrong</string>
 </resources>

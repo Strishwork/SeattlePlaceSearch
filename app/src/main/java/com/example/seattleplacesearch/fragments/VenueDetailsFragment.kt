@@ -1,4 +1,4 @@
-package com.example.seattleplacesearch
+package com.example.seattleplacesearch.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.example.seattleplacesearch.MapInfoHelper
+import com.example.seattleplacesearch.R
+import com.example.seattleplacesearch.Venue
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -29,6 +31,7 @@ class VenueDetailsFragment : Fragment(), OnMapReadyCallback {
     }
 
     private lateinit var venue: Venue
+    private lateinit var map: GoogleMap
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,41 +49,53 @@ class VenueDetailsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        venue = (arguments?.get(VENUE) as? Venue)!!
-        if (venue != null) {
-            detailsName.text = venue.name
-            detailsCategory.text = venue.category
-            detailsAddress.text = venue.location.address
-            detailsDistance.text =
-                String.format(resources.getString(R.string.distanceToCityCenter), venue.distanceToCenter)
-        }
+        venue = ((arguments?.get(VENUE) as? Venue)!!)
+        detailsName.text = venue.name
+        detailsCategory.text = venue.category
+        detailsAddress.text = venue.location.address
+        detailsDistance.text =
+            String.format(
+                resources.getString(R.string.distanceToCityCenter),
+                venue.distanceToCenter
+            )
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         if (googleMap != null) {
-            val seattle = LatLng(MapInfoHelper.SEATTLE_LATITUDE, MapInfoHelper.SEATTLE_LONGITUDE)
-            val venueLocation = LatLng(
-                venue.location.lat,
-                venue.location.lng
-            )
-            googleMap.addMarker(MarkerOptions().position(seattle))
-            googleMap.addMarker(MarkerOptions().position(venueLocation))
+            map = googleMap
 
-            val builder = LatLngBounds.Builder()
-            builder.include(seattle)
-            builder.include(venueLocation)
+            setMapMarkersAndRecenter()
 
-            val bounds = builder.build()
-
-            googleMap.moveCamera(
-                CameraUpdateFactory.newLatLngBounds(
-                    bounds,
-                    resources.getDimensionPixelOffset(R.dimen.map_padding)
-                )
-            )
-            googleMap.uiSettings.setAllGesturesEnabled(false)
-            googleMap.uiSettings.isMapToolbarEnabled = false
-            googleMap.setOnMarkerClickListener(OnMarkerClickListener { true })
+            disableMapInteractions()
         }
+    }
+
+    private fun setMapMarkersAndRecenter() {
+        val seattle = LatLng(MapInfoHelper.SEATTLE_LATITUDE, MapInfoHelper.SEATTLE_LONGITUDE)
+        val venueLocation = LatLng(
+            venue.location.lat,
+            venue.location.lng
+        )
+        map.addMarker(MarkerOptions().position(seattle))
+        map.addMarker(MarkerOptions().position(venueLocation))
+
+        val builder = LatLngBounds.Builder()
+        builder.include(seattle)
+        builder.include(venueLocation)
+
+        val bounds = builder.build()
+
+        map.moveCamera(
+            CameraUpdateFactory.newLatLngBounds(
+                bounds,
+                resources.getDimensionPixelOffset(R.dimen.map_padding)
+            )
+        )
+    }
+
+    private fun disableMapInteractions() {
+        map.uiSettings.setAllGesturesEnabled(false)
+        map.uiSettings.isMapToolbarEnabled = false
+        map.setOnMarkerClickListener { true }
     }
 }

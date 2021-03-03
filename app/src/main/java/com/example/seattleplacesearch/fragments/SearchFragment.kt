@@ -1,4 +1,4 @@
-package com.example.seattleplacesearch
+package com.example.seattleplacesearch.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -14,10 +14,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.seattleplacesearch.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.search_fragment.*
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -50,7 +50,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        recycler.apply {
+        searchTypeaheadRecycler.apply {
             layoutManager = LinearLayoutManager(activity)
             venuesAdapter = VenuesListAdapter { item -> itemClickedListener.itemClicked(item) }
             adapter = venuesAdapter
@@ -63,6 +63,39 @@ class SearchFragment : Fragment() {
             queryUpdatedListener = viewModel
         }
         initRecyclerView()
+
+        setSearchEditTextListener()
+
+        startSearchButton.setOnClickListener { startSearchButtonClick() }
+
+        viewModel.venuesLiveData.observe(viewLifecycleOwner, {
+            handleState(it)
+        })
+    }
+
+    private fun handleState(venuePreviewViewState: VenuePreviewViewState) {
+        when (venuePreviewViewState) {
+            is VenuePreviewViewState.Default -> {
+                venuesAdapter.submitList(venuePreviewViewState.venues)
+                changeStartSearchButtonVisibility(false)
+                changeNoResultTextVisibility(false)
+
+            }
+            is VenuePreviewViewState.Error -> {
+                Toast.makeText(
+                    context,
+                    resources.getString(R.string.errorMessage),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            is VenuePreviewViewState.Empty -> {
+                venuesAdapter.submitList(emptyList())
+                changeNoResultTextVisibility(true)
+            }
+        }
+    }
+
+    private fun setSearchEditTextListener(){
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -71,28 +104,6 @@ class SearchFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {}
-        })
-
-        startSearchButton.setOnClickListener { startSearchButtonClick() }
-
-        viewModel.venuesLiveData.observe(viewLifecycleOwner, {
-            when (val venuesPreviewViewState = it) {
-                is VenuePreviewViewState.Default -> {
-                    venuesAdapter.submitList(venuesPreviewViewState.venues)
-                    changeStartSearchButtonVisibility(false)
-
-                }
-                is VenuePreviewViewState.Error -> {
-                    Toast.makeText(
-                        context,
-                        venuesPreviewViewState.error.message,
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                is VenuePreviewViewState.Empty -> {
-                    venuesAdapter.submitList(emptyList())
-                }
-            }
         })
     }
 
@@ -111,6 +122,10 @@ class SearchFragment : Fragment() {
 
     private fun changeStartSearchButtonVisibility(state: Boolean) {
         startSearchButton.isVisible = state
+    }
+
+    private fun changeNoResultTextVisibility(state: Boolean) {
+        noResultTextView.isVisible = state
     }
 
     interface ItemClickedListener {

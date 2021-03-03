@@ -2,16 +2,12 @@ package com.example.seattleplacesearch
 
 import androidx.lifecycle.MutableLiveData
 import com.example.seattleplacesearch.di.ViewModelsModule
-import com.schibsted.spain.barista.assertion.BaristaListAssertions
+import com.example.seattleplacesearch.fragments.SearchFragment
 import com.schibsted.spain.barista.assertion.BaristaListAssertions.assertDisplayedAtPosition
 import com.schibsted.spain.barista.assertion.BaristaRecyclerViewAssertions.assertRecyclerViewItemCount
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -23,7 +19,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.mockito.Mockito
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest

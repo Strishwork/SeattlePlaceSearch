@@ -1,32 +1,20 @@
 package com.example.seattleplacesearch
 
-import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.lifecycle.MutableLiveData
 import com.example.seattleplacesearch.di.ViewModelsModule
-import com.schibsted.spain.barista.assertion.BaristaListAssertions
-import com.schibsted.spain.barista.assertion.BaristaListAssertions.assertDisplayedAtPosition
-import com.schibsted.spain.barista.assertion.BaristaRecyclerViewAssertions.assertRecyclerViewItemCount
+import com.example.seattleplacesearch.fragments.VenueDetailsFragment
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertContains
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
-import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
-import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-
-import org.junit.Test
-
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.mockito.Mockito
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -47,9 +35,9 @@ class VenueDetailsFragmentTest {
         Mockito.`when`(searchViewModelFactoryMock.create(SearchViewModel::class.java))
             .thenReturn(viewModelMock)
         Mockito.`when`(viewModelMock.venuesLiveData).thenReturn(venuesMutableLiveData)
-        val scenario = launchFragmentInHiltContainer<VenueDetailsFragment>(bundleOf("venue" to generateVenue()))
+        val scenario =
+            launchFragmentInHiltContainer<VenueDetailsFragment>(bundleOf("venue" to generateVenue()))
     }
-
 
     @Test
     fun testVenueDetailFieldsAreVisibleAndCorrect() {

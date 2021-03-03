@@ -3,6 +3,7 @@ package com.example.seattleplacesearch
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.seattleplacesearch.api.VenuesApi
+import com.example.seattleplacesearch.fragments.SearchFragment
 import io.mockk.every
 import io.mockk.mockkObject
 import io.reactivex.Observable
@@ -38,7 +39,7 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun testEmptyState() {
+    fun testVenuePreviewEmptyViewState() {
         val mockObserver = Mockito.mock(Observer::class.java) as Observer<VenuePreviewViewState>
         viewModel.venuesLiveData.observeForever(mockObserver)
         (viewModel as SearchFragment.SearchQueryUpdatedListener).queryUpdated("")

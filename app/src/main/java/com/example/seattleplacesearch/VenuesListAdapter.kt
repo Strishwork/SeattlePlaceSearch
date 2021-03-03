@@ -1,15 +1,14 @@
 package com.example.seattleplacesearch
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.android.gms.maps.model.LatLng
-import kotlinx.android.synthetic.main.typeahead_card.view.*
+import kotlinx.android.synthetic.main.search_typeahead_card.view.*
 
 class VenuesListAdapter(private val listener: (Venue) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -27,12 +26,11 @@ class VenuesListAdapter(private val listener: (Venue) -> Unit) :
     }
     private val differ = AsyncListDiffer(this, DIFF_CALLBACK)
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         return VenueViewHolder(
             LayoutInflater.from(parent.context).inflate(
-                R.layout.typeahead_card,
+                R.layout.search_typeahead_card,
                 parent,
                 false
             )
@@ -43,7 +41,7 @@ class VenuesListAdapter(private val listener: (Venue) -> Unit) :
         when (holder) {
             is VenueViewHolder -> {
                 holder.bind(differ.currentList.get(position))
-                holder.itemView.setOnClickListener{listener(differ.currentList.get(position))}
+                holder.itemView.setOnClickListener { listener(differ.currentList.get(position)) }
             }
         }
     }
@@ -56,21 +54,16 @@ class VenuesListAdapter(private val listener: (Venue) -> Unit) :
         differ.submitList(list)
     }
 
-    class VenueViewHolder
-    constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class VenueViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Venue) = with(itemView) {
             venueName.text = item.name
             venueCategory.text = item.category
-            venueDistance.text = MapUrlGenerator.getDistanceToSeattleCenter(
-                LatLng(
-                    item.location.lat.toDouble(),
-                    item.location.lng.toDouble()
-                )
-            )
+            venueDistance.text = "${item.distanceToCenter} m"
             Glide.with(venueIcon)
                 .load(item.iconUrl.toUri())
                 .centerCrop()
+                .placeholder(R.drawable.ic_venue_icon_placeholder)
                 .into(venueIcon)
         }
     }

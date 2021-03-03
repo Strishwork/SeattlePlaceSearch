@@ -1,27 +1,24 @@
 package com.example.seattleplacesearch
 
 import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
-data class JSONResponse (
-    @SerializedName("response")
-    val response: Response
+data class JSONResponse<T>(
+    val response: T
 )
 
 data class Response(
-    @SerializedName("venues")
-    val venues: ArrayList<VenueDTO> = ArrayList()
+    val venues: List<VenueDTO>
 )
 
 data class VenueDTO(
-    val name: String?,
-    val categories: ArrayList<Category> = ArrayList(),
+    val name: String,
+    val categories: List<Category>,
     val location: VenueLocation
 )
 
 data class Category(
-    val name: String? = null,
+    val name: String,
     val icon: Icon
 )
 
@@ -32,7 +29,7 @@ data class Icon(
 
 @Parcelize
 data class VenueLocation(
-    val address: String?,
+    val address: String,
     val lat: Double,
     val lng: Double
 ) : Parcelable
