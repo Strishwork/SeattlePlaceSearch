@@ -14,13 +14,13 @@ import io.reactivex.schedulers.Schedulers
 class SearchViewModel(private val venuesApi: VenuesApi) : ViewModel(),
     SearchFragment.SearchQueryUpdatedListener {
 
-    private val venuesMutableLiveData = MutableLiveData<VenuePreviewViewState>()
-    val venuesLiveData: LiveData<VenuePreviewViewState> = venuesMutableLiveData
+    private val venuesMutableLiveData = MutableLiveData<SearchTypeaheadViewState>()
+    val venuesLiveData: LiveData<SearchTypeaheadViewState> = venuesMutableLiveData
     private lateinit var disposable: Disposable
 
     private fun getVenues(query: String) {
         if (query.trim().isEmpty()) {
-            venuesMutableLiveData.postValue(VenuePreviewViewState.Empty)
+            venuesMutableLiveData.postValue(SearchTypeaheadViewState.Empty)
             return
         }
 
@@ -31,17 +31,17 @@ class SearchViewModel(private val venuesApi: VenuesApi) : ViewModel(),
     }
 
     private fun onFailure(t: Throwable) {
-        venuesMutableLiveData.postValue(VenuePreviewViewState.Error(t))
+        venuesMutableLiveData.postValue(SearchTypeaheadViewState.Error(t))
     }
 
     private fun onResponse(response: JSONResponse<Response>) {
         when {
             response.response.venues.isEmpty() -> venuesMutableLiveData.postValue(
-                VenuePreviewViewState.Empty
+                SearchTypeaheadViewState.Empty
             )
             else -> {
                 val venues = response.response.venues.map { venue ->
-                    Venue(
+                    VenueViewState(
                         name = venue.name ?: "-",
                         category = venue.categories.firstOrNull()?.name ?: "-",
                         location = VenueLocation(
@@ -55,7 +55,7 @@ class SearchViewModel(private val venuesApi: VenuesApi) : ViewModel(),
                         distanceToCenter = MapInfoHelper.getDistanceToSeattleCenter(venue.location)
                     )
                 }
-                venuesMutableLiveData.postValue(VenuePreviewViewState.Default(venues))
+                venuesMutableLiveData.postValue(SearchTypeaheadViewState.Default(venues))
             }
         }
     }

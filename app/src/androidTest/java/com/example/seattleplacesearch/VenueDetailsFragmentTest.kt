@@ -27,7 +27,7 @@ class VenueDetailsFragmentTest {
     @Inject
     lateinit var searchViewModelFactoryMock: SearchViewModelFactory
     private val viewModelMock = Mockito.mock(SearchViewModel::class.java)
-    private val venuesMutableLiveData = MutableLiveData<VenuePreviewViewState>()
+    private val venuesMutableLiveData = MutableLiveData<SearchTypeaheadViewState>()
 
     @Before
     fun init() {
@@ -52,8 +52,8 @@ class VenueDetailsFragmentTest {
         assertDisplayed(R.id.detailsMap)
     }
 
-    private fun generateVenue(): Venue {
-        return Venue(
+    private fun generateVenue(): VenueViewState {
+        return VenueViewState(
             "Name 1",
             "Category 1",
             VenueLocation(

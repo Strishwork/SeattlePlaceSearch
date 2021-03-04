@@ -10,16 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.search_typeahead_card.view.*
 
-class VenuesListAdapter(private val listener: (Venue) -> Unit) :
+class VenuesListAdapter(private val listener: (VenueViewState) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Venue>() {
+    private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<VenueViewState>() {
 
-        override fun areItemsTheSame(oldItem: Venue, newItem: Venue): Boolean {
+        override fun areItemsTheSame(oldItem: VenueViewState, newItem: VenueViewState): Boolean {
             return oldItem.name == newItem.name
         }
 
-        override fun areContentsTheSame(oldItem: Venue, newItem: Venue): Boolean {
+        override fun areContentsTheSame(oldItem: VenueViewState, newItem: VenueViewState): Boolean {
             return oldItem == newItem
         }
 
@@ -50,13 +50,13 @@ class VenuesListAdapter(private val listener: (Venue) -> Unit) :
         return differ.currentList.size
     }
 
-    fun submitList(list: List<Venue>) {
+    fun submitList(list: List<VenueViewState>) {
         differ.submitList(list)
     }
 
     class VenueViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(item: Venue) = with(itemView) {
+        fun bind(item: VenueViewState) = with(itemView) {
             venueName.text = item.name
             venueCategory.text = item.category
             venueDistance.text = "${item.distanceToCenter} m"

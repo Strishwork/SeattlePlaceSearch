@@ -31,7 +31,7 @@ class SearchFragmentTest {
     @Inject
     lateinit var searchViewModelFactoryMock: SearchViewModelFactory
     private val viewModelMock = Mockito.mock(SearchViewModel::class.java)
-    private val venuesMutableLiveData = MutableLiveData<VenuePreviewViewState>()
+    private val venuesMutableLiveData = MutableLiveData<SearchTypeaheadViewState>()
 
     @Before
     fun init() {
@@ -73,7 +73,7 @@ class SearchFragmentTest {
 
     private fun setVenues() {
         val venues = listOf(
-            Venue(
+            VenueViewState(
                 "Name 1",
                 "Category 1",
                 VenueLocation(
@@ -84,7 +84,7 @@ class SearchFragmentTest {
                 "",
                 50
             ),
-            Venue(
+            VenueViewState(
                 "Name 2",
                 "Category 2",
                 VenueLocation(
@@ -96,6 +96,6 @@ class SearchFragmentTest {
                 100
             )
         )
-        venuesMutableLiveData.postValue(VenuePreviewViewState.Default(venues))
+        venuesMutableLiveData.postValue(SearchTypeaheadViewState.Default(venues))
     }
 }

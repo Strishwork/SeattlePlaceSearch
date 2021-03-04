@@ -8,7 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.example.seattleplacesearch.MapInfoHelper
 import com.example.seattleplacesearch.R
-import com.example.seattleplacesearch.Venue
+import com.example.seattleplacesearch.VenueViewState
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -25,12 +25,12 @@ class VenueDetailsFragment : Fragment(), OnMapReadyCallback {
 
     companion object {
         private const val VENUE = "venue"
-        fun newInstance(venue: Venue) = VenueDetailsFragment().apply {
-            arguments = bundleOf(VENUE to venue)
+        fun newInstance(venueViewState: VenueViewState) = VenueDetailsFragment().apply {
+            arguments = bundleOf(VENUE to venueViewState)
         }
     }
 
-    private lateinit var venue: Venue
+    private lateinit var venueViewState: VenueViewState
     private lateinit var map: GoogleMap
 
     override fun onCreateView(
@@ -49,14 +49,14 @@ class VenueDetailsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        venue = ((arguments?.get(VENUE) as? Venue)!!)
-        detailsName.text = venue.name
-        detailsCategory.text = venue.category
-        detailsAddress.text = venue.location.address
+        venueViewState = ((arguments?.get(VENUE) as? VenueViewState)!!)
+        detailsName.text = venueViewState.name
+        detailsCategory.text = venueViewState.category
+        detailsAddress.text = venueViewState.location.address
         detailsDistance.text =
             String.format(
                 resources.getString(R.string.distanceToCityCenter),
-                venue.distanceToCenter
+                venueViewState.distanceToCenter
             )
     }
 
@@ -73,8 +73,8 @@ class VenueDetailsFragment : Fragment(), OnMapReadyCallback {
     private fun setMapMarkersAndRecenter() {
         val seattle = LatLng(MapInfoHelper.SEATTLE_LATITUDE, MapInfoHelper.SEATTLE_LONGITUDE)
         val venueLocation = LatLng(
-            venue.location.lat,
-            venue.location.lng
+            venueViewState.location.lat,
+            venueViewState.location.lng
         )
         map.addMarker(MarkerOptions().position(seattle))
         map.addMarker(MarkerOptions().position(venueLocation))

@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Venue(
+data class VenueViewState(
     val name: String,
     val category: String,
     val location: VenueLocation,

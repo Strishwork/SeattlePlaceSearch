@@ -40,13 +40,13 @@ class SearchViewModelTest {
 
     @Test
     fun testVenuePreviewEmptyViewState() {
-        val mockObserver = Mockito.mock(Observer::class.java) as Observer<VenuePreviewViewState>
+        val mockObserver = Mockito.mock(Observer::class.java) as Observer<SearchTypeaheadViewState>
         viewModel.venuesLiveData.observeForever(mockObserver)
         (viewModel as SearchFragment.SearchQueryUpdatedListener).queryUpdated("")
-        val argumentCaptor = ArgumentCaptor.forClass(VenuePreviewViewState::class.java)
+        val argumentCaptor = ArgumentCaptor.forClass(SearchTypeaheadViewState::class.java)
         Mockito.verify(mockObserver, Mockito.times(1)).onChanged(argumentCaptor.capture())
 
-        assert(argumentCaptor.allValues.last() is VenuePreviewViewState.Empty)
+        assert(argumentCaptor.allValues.last() is SearchTypeaheadViewState.Empty)
     }
 
     @Test
@@ -66,21 +66,21 @@ class SearchViewModelTest {
         Mockito.`when`(venuesApiMock.getVenuesList("test"))
             .thenReturn(Observable.just(mockResponse))
 
-        val mockObserver = Mockito.mock(Observer::class.java) as Observer<VenuePreviewViewState>
+        val mockObserver = Mockito.mock(Observer::class.java) as Observer<SearchTypeaheadViewState>
         viewModel.venuesLiveData.observeForever(mockObserver)
 
         (viewModel as SearchFragment.SearchQueryUpdatedListener).queryUpdated("test")
 
-        val argumentCaptor = ArgumentCaptor.forClass(VenuePreviewViewState::class.java)
+        val argumentCaptor = ArgumentCaptor.forClass(SearchTypeaheadViewState::class.java)
         Mockito.verify(mockObserver, Mockito.times(1)).onChanged(argumentCaptor.capture())
 
-        assert(argumentCaptor.allValues.last() is VenuePreviewViewState.Default)
+        assert(argumentCaptor.allValues.last() is SearchTypeaheadViewState.Default)
 
-        val actualState = argumentCaptor.allValues.last() as VenuePreviewViewState.Default
+        val actualState = argumentCaptor.allValues.last() as SearchTypeaheadViewState.Default
 
-        Assert.assertThat(actualState.venues[0].name, `is`("Test name"))
-        Assert.assertThat(actualState.venues[0].category, `is`("Test category"))
-        Assert.assertThat(actualState.venues[0].location.address, `is`("Test address"))
+        Assert.assertThat(actualState.venueViewStates[0].name, `is`("Test name"))
+        Assert.assertThat(actualState.venueViewStates[0].category, `is`("Test category"))
+        Assert.assertThat(actualState.venueViewStates[0].location.address, `is`("Test address"))
     }
 
     @Test
@@ -88,24 +88,24 @@ class SearchViewModelTest {
         Mockito.`when`(venuesApiMock.getVenuesList("test"))
             .thenReturn(Observable.error(Throwable("Test error")))
 
-        val mockObserver = Mockito.mock(Observer::class.java) as Observer<VenuePreviewViewState>
+        val mockObserver = Mockito.mock(Observer::class.java) as Observer<SearchTypeaheadViewState>
         viewModel.venuesLiveData.observeForever(mockObserver)
 
         (viewModel as SearchFragment.SearchQueryUpdatedListener).queryUpdated("test")
 
-        val argumentCaptor = ArgumentCaptor.forClass(VenuePreviewViewState::class.java)
+        val argumentCaptor = ArgumentCaptor.forClass(SearchTypeaheadViewState::class.java)
         Mockito.verify(mockObserver, Mockito.times(1)).onChanged(argumentCaptor.capture())
 
-        assert(argumentCaptor.allValues.last() is VenuePreviewViewState.Error)
+        assert(argumentCaptor.allValues.last() is SearchTypeaheadViewState.Error)
 
-        val actualState = argumentCaptor.allValues.last() as VenuePreviewViewState.Error
+        val actualState = argumentCaptor.allValues.last() as SearchTypeaheadViewState.Error
 
         Assert.assertThat(actualState.error.message, `is`("Test error"))
     }
 
-    private fun mockVenues(): List<VenueDTO> {
+    private fun mockVenues(): List<Venue> {
         val mockVenuesDto =
-            Mockito.mock(VenueDTO::class.java, Answers.RETURNS_DEEP_STUBS)
+            Mockito.mock(Venue::class.java, Answers.RETURNS_DEEP_STUBS)
         mockVenuesDto.apply {
             Mockito.`when`(mockVenuesDto.name).thenReturn("Test name")
             Mockito.`when`(mockVenuesDto.categories)

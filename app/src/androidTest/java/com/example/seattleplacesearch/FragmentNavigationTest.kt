@@ -5,7 +5,6 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.seattleplacesearch.di.ViewModelsModule
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
-import com.schibsted.spain.barista.interaction.BaristaClickInteractions
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickBack
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -31,7 +30,7 @@ class FragmentNavigationTest {
     @Inject
     lateinit var searchViewModelFactoryMock: SearchViewModelFactory
     private val viewModelMock = Mockito.mock(SearchViewModel::class.java)
-    private val venuesMutableLiveData = MutableLiveData<VenuePreviewViewState>()
+    private val venuesMutableLiveData = MutableLiveData<SearchTypeaheadViewState>()
 
     @Before
     fun init() {
@@ -53,7 +52,7 @@ class FragmentNavigationTest {
 
     private fun setVenue() {
         val venues = listOf(
-            Venue(
+            VenueViewState(
                 "Name 1",
                 "Category 1",
                 VenueLocation(
@@ -65,7 +64,7 @@ class FragmentNavigationTest {
                 50
             )
         )
-        venuesMutableLiveData.postValue(VenuePreviewViewState.Default(venues))
+        venuesMutableLiveData.postValue(SearchTypeaheadViewState.Default(venues))
     }
 
 }

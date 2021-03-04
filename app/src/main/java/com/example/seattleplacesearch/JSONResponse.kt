@@ -8,10 +8,10 @@ data class JSONResponse<T>(
 )
 
 data class Response(
-    val venues: List<VenueDTO>
+    val venues: List<Venue>
 )
 
-data class VenueDTO(
+data class Venue(
     val name: String,
     val categories: List<Category>,
     val location: VenueLocation

@@ -20,9 +20,9 @@ class MainActivity : AppCompatActivity(), SearchFragment.ItemClickedListener {
         }
     }
 
-    override fun itemClicked(venue: Venue) {
+    override fun itemClicked(venueViewState: VenueViewState) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, VenueDetailsFragment.newInstance(venue))
+            .replace(R.id.fragment_container, VenueDetailsFragment.newInstance(venueViewState))
             .addToBackStack(null)
             .commit()
         displayHomeButtonAsUp(true)

@@ -24,6 +24,7 @@ class SearchFragment : Fragment() {
 
     companion object {
         fun newInstance() = SearchFragment()
+        private const val DELAY_BEFORE_REQUEST: Long = 1000
     }
 
     @Inject
@@ -73,22 +74,22 @@ class SearchFragment : Fragment() {
         })
     }
 
-    private fun handleState(venuePreviewViewState: VenuePreviewViewState) {
-        when (venuePreviewViewState) {
-            is VenuePreviewViewState.Default -> {
-                venuesAdapter.submitList(venuePreviewViewState.venues)
+    private fun handleState(searchTypeaheadViewState: SearchTypeaheadViewState) {
+        when (searchTypeaheadViewState) {
+            is SearchTypeaheadViewState.Default -> {
+                venuesAdapter.submitList(searchTypeaheadViewState.venueViewStates)
                 changeStartSearchButtonVisibility(false)
                 changeNoResultTextVisibility(false)
 
             }
-            is VenuePreviewViewState.Error -> {
+            is SearchTypeaheadViewState.Error -> {
                 Toast.makeText(
                     context,
                     resources.getString(R.string.errorMessage),
                     Toast.LENGTH_LONG
                 ).show()
             }
-            is VenuePreviewViewState.Empty -> {
+            is SearchTypeaheadViewState.Empty -> {
                 venuesAdapter.submitList(emptyList())
                 changeNoResultTextVisibility(true)
             }
@@ -107,9 +108,10 @@ class SearchFragment : Fragment() {
         })
     }
 
+    //Just for demo purposes
     private fun changeSearchQuery(query: String) {
         handler.removeCallbacksAndMessages(null)
-        handler.postDelayed({ queryUpdatedListener.queryUpdated(query) }, 1000)
+        handler.postDelayed({ queryUpdatedListener.queryUpdated(query) }, DELAY_BEFORE_REQUEST)
     }
 
     private fun startSearchButtonClick() {
@@ -129,7 +131,7 @@ class SearchFragment : Fragment() {
     }
 
     interface ItemClickedListener {
-        fun itemClicked(venue: Venue)
+        fun itemClicked(venueViewState: VenueViewState)
     }
 
     interface SearchQueryUpdatedListener {
